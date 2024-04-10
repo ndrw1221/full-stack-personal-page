@@ -1,0 +1,12 @@
+{
+  "name": "Lab5",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "andrew <andrew891221@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "cd backend %% yarn start",
+    "build": "cd backend %% yarn build",
+    "install:all": "cd frontend && yarn install --production=false && cd ../backend && yarn"
+  }
+}
