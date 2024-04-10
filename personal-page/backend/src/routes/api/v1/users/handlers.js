@@ -21,6 +21,21 @@ export async function createUser(req, res) {
   }
 }
 
+export async function getUserByName(req, res) {
+  const { name } = req.params;
+  const user = await prisma.user.findUnique({
+    where: {
+      name: name,
+    },
+  });
+  if (user) {
+    const { password, ...userWithoutPassword } = user;
+    res.status(200).json(userWithoutPassword);
+  } else {
+    res.status(404).json({ error: "User not found." });
+  }
+}
+
 export async function getAllUsers(req, res) {
   const allUsers = await prisma.user.findMany();
   res.status(200).json(allUsers);
