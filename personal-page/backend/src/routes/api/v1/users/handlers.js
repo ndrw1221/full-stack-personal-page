@@ -1,43 +1,24 @@
 import { prisma } from "../../../../adapters.js";
-
-// Initialize a users list to act as in-memory database
-let users = [
-  {
-    id: 1,
-    name: "Phil Dunphy",
-  },
-];
-
-// // Handler to create a new user and add them to the users list
-// export async function createUser(req, res) {
-//   const { name } = req.body;
-
-//   // Simple ID generator - in real apps, use more robust methods for ID generation
-//   const id = users.length + 1;
-
-//   const newUser = { id, name };
-
-//   // Add the new user to the list
-//   users.push(newUser);
-
-//   // Respond with the newly created user object
-//   res.status(201).json(newUser);
-// }
-
-// // Handler to get all users from the users list
-// export async function getAllUsers(req, res) {
-//   // Respond with the current list of users
-//   res.status(200).json(users);
-// }
+import bcrypt from "bcrypt";
 
 export async function createUser(req, res) {
-  const { name } = req.body;
-  const user = await prisma.user.create({
-    data: {
-      name: name,
-    },
-  });
-  res.status(201).json(user);
+  const { name, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+    const user = await prisma.user.create({
+      data: {
+        name: name,
+        password: hashedPassword,
+      },
+    });
+    // Consider what data to return - for security, you might not want to send the password back
+    const { password, ...userWithoutPassword } = user;
+    res.status(201).json(userWithoutPassword);
+  } catch (error) {
+    // Handle potential errors, such as a violation of the unique constraint for 'name'
+    console.error("Error creating user:", error);
+    res.status(400).json({ error: "Error creating user." });
+  }
 }
 
 export async function getAllUsers(req, res) {
