@@ -4,7 +4,7 @@ import App from "./App.jsx";
 import "./index.css";
 import Home from "./components/Home.jsx";
 import About from "./components/About.jsx";
-import Users from "./components/Users.jsx";
+import Comments from "./components/Comments.jsx";
 import Signin from "./components/Signin.jsx";
 import Signup from "./components/Signup.jsx";
 import { createHashRouter, RouterProvider } from "react-router-dom";
@@ -20,8 +20,8 @@ const router = createHashRouter([
         element: <About />,
       },
       {
-        path: "/users",
-        element: <Users />,
+        path: "/comments",
+        element: <Comments />,
       },
       {
         path: "/sign-in",
