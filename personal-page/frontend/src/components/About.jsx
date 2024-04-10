@@ -4,7 +4,7 @@ export default function About() {
   return (
     <div className= 'flex flex-col basis-11/12 mx-40 mt-16'>
         <div className='basis-1/3 flex flex-row'>
-          <img src={my_image} className='w-60 h-60 rounded-full'/>
+          <img src={my_image} className='w-60 h-60 ml-20 rounded-full'/>
           <p className='text-9xl font-serif my-auto ml-16 text-emerald-950'>Andrew Hsieh</p>
         </div>
         <div className='mt-6 mx-12 text-lg leading-8 text-gray-600'>
