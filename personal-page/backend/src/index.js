@@ -3,6 +3,7 @@ import cors from "cors";
 import rootRouter from "./routes/index.js";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
+import { prisma } from "./adapters.js";
 
 const port = process.env.PORT || 8000;
 const app = express();
@@ -24,4 +25,8 @@ app.get("*", (req, res) => {
 
 app.listen(port, () => {
   console.log(`Example app is listening at http://localhost:${port}`);
+});
+
+process.on("exit", async () => {
+  await prisma.$disconnect();
 });

@@ -3,7 +3,7 @@ import { getAllUsers, createUser } from "./handlers.js";
 
 const router = Router();
 
-router.get("/", getAllUsers);
 router.post("/", createUser);
+router.get("/", getAllUsers);
 
 export default router;
