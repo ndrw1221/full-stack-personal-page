@@ -14,7 +14,7 @@ export default function Signin() {
     setPassword(event.target.value.trim());
   };
 
-  const signin = async () => {
+  const signin = async (event) => {
     // try {
     //   const response = await fetch('http://localhost:8000/api/v1/users', {
     //     method: 'POST',
@@ -35,15 +35,22 @@ export default function Signin() {
     // } catch (error) {
     //   console.error('Failed to create user:', error);
     // }
+    event.preventDefault();
+    setUsername("");
+    setPassword("");
     setShowNotification(true); // Show notification on success
-    setTimeout(() => setShowNotification(false), 6000); // Hide after 6 seconds
+    setTimeout(() => setShowNotification(false), 4000); // Hide after 4 seconds
   };
 
   return (
     <>
       {showNotification && (
-        <div className="fixed top-40 right-60 m-4 bg-green-500 text-white py-2 px-4 rounded-lg">
-          You are logged in.
+        <div
+          class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 w-1/2 mx-auto"
+          role="alert"
+        >
+          <p class="font-bold">Success</p>
+          <p>You have been logged in successfully.</p>
         </div>
       )}
 
@@ -55,7 +62,7 @@ export default function Signin() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={signin}>
             <div>
               <label
                 htmlFor="username"
@@ -100,12 +107,13 @@ export default function Signin() {
 
             <div>
               <button
+                type="submit"
                 className={`flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
                   username && password
                     ? "bg-indigo-600 hover:bg-indigo-500"
                     : "bg-indigo-400"
                 }`}
-                onClick={signin}
+                // onClick={signin}
                 disabled={!(username && password)}
               >
                 Sign in
