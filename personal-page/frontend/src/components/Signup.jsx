@@ -5,7 +5,7 @@ export default function Signup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showNotification, setShowNotification] = useState(false);
+  // const [showNotification, setShowNotification] = useState(false);
   const [showError, setShowError] = useState("");
 
   const navigate = useNavigate();
@@ -46,8 +46,8 @@ export default function Signup() {
         setUsername("");
         setPassword("");
         setConfirmPassword("");
-        setShowNotification(true); // Show notification on success
-        setTimeout(() => setShowNotification(false), 4000); // Hide after 4 seconds
+        // setShowNotification(true); // Show notification on success
+        // setTimeout(() => setShowNotification(false), 4000); // Hide after 4 seconds
 
         // Save the token in local storage
         const data = await response.json();
@@ -65,7 +65,7 @@ export default function Signup() {
 
   return (
     <>
-      {showNotification && (
+      {/* {showNotification && (
         <div
           class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 w-1/2 mx-auto"
           role="alert"
@@ -73,7 +73,7 @@ export default function Signup() {
           <p class="font-bold">Success</p>
           <p>Your account has been created successfully.</p>
         </div>
-      )}
+      )} */}
 
       <div className="flex h-full flex-1 flex-col justify-center px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm -mt-60">

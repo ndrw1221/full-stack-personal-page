@@ -5,9 +5,8 @@ import { AuthContext } from "../contexts/AuthContext.js";
 export default function Signin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [showNotification, setShowNotification] = useState(false);
   const [showError, setShowError] = useState(false);
-  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
+  const { setIsAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleUsernameChange = (event) => {
@@ -33,14 +32,13 @@ export default function Signin() {
       if (response.ok) {
         setUsername("");
         setPassword("");
-        setShowNotification(true); // Show notification on success
-        setTimeout(() => setShowNotification(false), 4000); // Hide after 4 seconds
 
         // Save the token in local storage
         const data = await response.json();
         localStorage.setItem("token", data.token);
         setIsAuthenticated(data.auth);
         console.log("Logged in as", username);
+
         navigate("/profile");
       } else if (response.status === 401) {
         console.error("Invalid credentials");
@@ -53,7 +51,7 @@ export default function Signin() {
 
   return (
     <>
-      {showNotification && (
+      {/* {showNotification && (
         <div
           class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 w-1/2 mx-auto"
           role="alert"
@@ -62,8 +60,7 @@ export default function Signin() {
           <p>You have been logged in successfully.</p>
           {}
         </div>
-      )}
-
+      )} */}
       <div className="flex h-full flex-1 flex-col justify-center px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm -mt-60">
           <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
