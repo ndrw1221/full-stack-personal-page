@@ -40,3 +40,18 @@ export async function getAllUsers(req, res) {
   const allUsers = await prisma.user.findMany();
   res.status(200).json(allUsers);
 }
+
+export async function deleteUserByName(req, res) {
+  const { name } = req.params;
+  try {
+    const user = await prisma.user.delete({
+      where: {
+        name: name,
+      },
+    });
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(400).json({ error: "Error deleting user." });
+  }
+}
