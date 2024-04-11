@@ -5,6 +5,7 @@ export default function Signin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showNotification, setShowNotification] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value.trim());
@@ -15,31 +16,31 @@ export default function Signin() {
   };
 
   const signin = async (event) => {
-    // try {
-    //   const response = await fetch('http://localhost:8000/api/v1/users', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ name: username }),
-    //   });
-    //   if (response.ok) {
-    //     setShowNotification(true); // Show notification on success
-    //     setTimeout(() => setShowNotification(false), 6000); // Hide after 6 seconds
-    //   } else {
-    //     throw new Error(`Error creating user, status: ${response.status}`);
-    //   }
-    //   const data = await response.json();
-    //   console.log('User created:', data);
-    //   // Optionally clear the input field or give feedback to the user
-    // } catch (error) {
-    //   console.error('Failed to create user:', error);
-    // }
     event.preventDefault();
-    setUsername("");
-    setPassword("");
-    setShowNotification(true); // Show notification on success
-    setTimeout(() => setShowNotification(false), 4000); // Hide after 4 seconds
+    setShowError(false);
+    try {
+      const response = await fetch("http://localhost:8000/api/v1/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: username, password: password }),
+      });
+
+      if (response.ok) {
+        setUsername("");
+        setPassword("");
+        setShowNotification(true); // Show notification on success
+        setTimeout(() => setShowNotification(false), 4000); // Hide after 4 seconds
+        const data = await response.json();
+        console.log("Logged in as:", data);
+      } else if (response.status === 401) {
+        console.error("Invalid credentials");
+        setShowError(true);
+      }
+    } catch (error) {
+      console.error("Failed to log in:", error);
+    }
   };
 
   return (
@@ -51,6 +52,7 @@ export default function Signin() {
         >
           <p class="font-bold">Success</p>
           <p>You have been logged in successfully.</p>
+          {}
         </div>
       )}
 
@@ -59,6 +61,11 @@ export default function Signin() {
           <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign in to your account
           </h2>
+          {showError && (
+            <div className="text-center text-red-500 mt-2 -mb-2 animate-bounce ease-in-out">
+              Incorrect username or password
+            </div>
+          )}
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -113,7 +120,6 @@ export default function Signin() {
                     ? "bg-indigo-600 hover:bg-indigo-500"
                     : "bg-indigo-400"
                 }`}
-                // onClick={signin}
                 disabled={!(username && password)}
               >
                 Sign in
