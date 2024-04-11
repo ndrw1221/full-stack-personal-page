@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -7,6 +7,8 @@ export default function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showNotification, setShowNotification] = useState(false);
   const [showError, setShowError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value.trim());
@@ -29,13 +31,16 @@ export default function Signup() {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/api/v1/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name: username, password: password }),
-      });
+      const response = await fetch(
+        "http://localhost:8000/api/v1/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name: username, password: password }),
+        }
+      );
 
       if (response.ok) {
         setUsername("");
@@ -43,8 +48,13 @@ export default function Signup() {
         setConfirmPassword("");
         setShowNotification(true); // Show notification on success
         setTimeout(() => setShowNotification(false), 4000); // Hide after 4 seconds
+
+        // Save the token in local storage
         const data = await response.json();
-        console.log("User created:", data);
+        localStorage.setItem("token", data.token);
+        console.log("User created successfully");
+
+        navigate("/profile");
       } else if (response.status === 409) {
         setShowError("User already exists");
       }
@@ -152,7 +162,7 @@ export default function Signup() {
                 }`}
                 disabled={!(username && password && confirmPassword)}
               >
-                Sign in
+                Sign up
               </button>
             </div>
           </form>

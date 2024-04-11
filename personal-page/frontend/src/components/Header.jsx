@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { Dialog, Popover } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { AuthContext } from "../contexts/AuthContext";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isAuthenticated } = useContext(AuthContext);
 
   return (
     <header className="bg-white basis-1/12">
@@ -57,12 +59,23 @@ export default function Header() {
           </Link>
         </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <Link
-            to="/sign-in"
-            className="text-sm font-semibold leading-6 text-gray-900"
-          >
-            Sign in <span aria-hidden="true">&rarr;</span>
-          </Link>
+          {isAuthenticated ? (
+            <Link
+              to="/profile"
+              className="text-sm font-semibold leading-6 text-gray-900"
+            >
+              Profile
+              <span aria-hidden="true">&rarr;</span>
+            </Link>
+          ) : (
+            <Link
+              to="/sign-in"
+              className="text-sm font-semibold leading-6 text-gray-900"
+            >
+              Sign in
+              <span aria-hidden="true">&rarr;</span>
+            </Link>
+          )}
         </div>
       </nav>
       <Dialog

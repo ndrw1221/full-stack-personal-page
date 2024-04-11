@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext.js";
 import my_image from "../assets/my-image.jpg";
-import guest_image from "../assets/guest.jpg";
+import guest_image from "../assets/default_avatar.jpg";
 
 let comments = [
   {
@@ -26,6 +27,8 @@ let id = 3;
 export default function Comments() {
   const [commentsState, setCommentsState] = useState(comments);
   const [inputValue, setInputValue] = useState("");
+  const { isAuthenticated } = useContext(AuthContext);
+
   const commentHandler = () => {
     const newComment = {
       id: id++, // need to be fixed
@@ -78,9 +81,12 @@ export default function Comments() {
           name="comment"
           required
           className="min-w-0 flex-auto rounded-md border-0 bg-black/5 px-3.5 py-2 text-gray-500 shadow-sm ring-1 ring-inset ring-black/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-          placeholder="Leave a comment"
+          placeholder={
+            isAuthenticated ? "Leave a comment" : "Sign in to leave a comment"
+          }
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
+          disabled={!isAuthenticated}
         />
 
         <button

@@ -7,6 +7,7 @@ import About from "./components/About.jsx";
 import Comments from "./components/Comments.jsx";
 import Signin from "./components/Signin.jsx";
 import Signup from "./components/Signup.jsx";
+import Profile from "./components/Profile.jsx";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 
 const router = createHashRouter([
@@ -30,6 +31,10 @@ const router = createHashRouter([
       {
         path: "/sign-up",
         element: <Signup />,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
       },
     ],
   },

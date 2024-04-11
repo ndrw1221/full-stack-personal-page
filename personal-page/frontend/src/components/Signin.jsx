@@ -1,11 +1,14 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext.js";
 
 export default function Signin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showNotification, setShowNotification] = useState(false);
   const [showError, setShowError] = useState(false);
+  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value.trim());
@@ -32,8 +35,13 @@ export default function Signin() {
         setPassword("");
         setShowNotification(true); // Show notification on success
         setTimeout(() => setShowNotification(false), 4000); // Hide after 4 seconds
+
+        // Save the token in local storage
         const data = await response.json();
-        console.log("Logged in as:", data);
+        localStorage.setItem("token", data.token);
+        setIsAuthenticated(data.auth);
+        console.log("Logged in as", username);
+        navigate("/profile");
       } else if (response.status === 401) {
         console.error("Invalid credentials");
         setShowError(true);
