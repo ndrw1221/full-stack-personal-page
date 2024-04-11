@@ -60,5 +60,5 @@ export async function register(req, res) {
 }
 
 export async function me(req, res) {
-  res.status(200).json({ name: req.userName });
+  res.status(200).json({ user: req.userName });
 }
