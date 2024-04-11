@@ -1,5 +1,6 @@
 import { prisma } from "../../../../adapters.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export async function login(req, res) {
   const { name, password } = req.body;
@@ -15,14 +16,15 @@ export async function login(req, res) {
   if (!passwordValid) {
     return res.status(401).json({ message: "Invalid credentials." });
   }
-  // Consider what data to return - for security, you might not want to send the password back
-  const { password: userPassword, ...userWithoutPassword } = user;
-  res.status(200).json(userWithoutPassword);
+  const token = jwt.sign({ name: user.name }, process.env.JWT_SECRET, {
+    expiresIn: "30m",
+  });
+  res.status(200).json({ auth: true, token: token });
 }
 
 export async function logout(req, res) {
   // Implement logout functionality
-  res.status(200).json({ message: "Logout successful." });
+  res.status(200).json({ auth: false, token: null });
 }
 
 export async function register(req, res) {
@@ -45,12 +47,18 @@ export async function register(req, res) {
         password: hashedPassword,
       },
     });
-    // Consider what data to return - for security, you might not want to send the password back
-    const { password, ...userWithoutPassword } = user;
-    res.status(201).json(userWithoutPassword);
+
+    const token = jwt.sign({ name: user.name }, process.env.JWT_SECRET, {
+      expiresIn: "30m",
+    });
+    res.status(201).json({ auth: true, token: token });
   } catch (error) {
     // Handle potential errors, such as a violation of the unique constraint for 'name'
     console.error("Error creating user:", error);
     res.status(400).json({ error: "Error creating user." });
   }
+}
+
+export async function me(req, res) {
+  res.status(200).json({ name: req.userName });
 }
