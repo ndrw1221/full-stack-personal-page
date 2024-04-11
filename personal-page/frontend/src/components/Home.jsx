@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext.js";
 
 export default function Home() {
+  const { isAuthenticated } = useContext(AuthContext);
   return (
     <div className="bg-white">
       <div className="relative isolate px-6 lg:px-8">
@@ -26,10 +29,11 @@ export default function Home() {
                 About me
               </Link>
               <Link
-                to="/sign-in"
+                to={isAuthenticated ? "/profile" : "/sign-in"}
                 className="text-sm font-semibold leading-6 text-gray-900"
               >
-                Sign in <span aria-hidden="true">→</span>
+                {isAuthenticated ? "Go to profile" : "Sign in"}
+                <span aria-hidden="true">→</span>
               </Link>
             </div>
           </div>
