@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext";
 
 export default function ProfilePhotoChangeModal({ isOpen, onClose }) {
   const [photo, setPhoto] = useState(null);
   const [preview, setPreview] = useState(null);
   const [showError, setShowError] = useState(false);
+  const { setAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handlePhotoChange = (event) => {
     const file = event.target.files[0];
@@ -20,7 +24,7 @@ export default function ProfilePhotoChangeModal({ isOpen, onClose }) {
     event.preventDefault();
     setShowError(false);
 
-    if (photo === null || !photo.type.startsWith("image/")) {
+    if (!photo.type.startsWith("image/")) {
       setShowError(true);
       return;
     }
@@ -29,19 +33,33 @@ export default function ProfilePhotoChangeModal({ isOpen, onClose }) {
     formData.append("photo", photo);
 
     try {
-      const response = await fetch("http://localhost:8000/api/v1/users/photo", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: formData,
-      });
+      const response = await fetch(
+        "http://localhost:8000/api/v1/users/upload",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: formData,
+        }
+      );
 
       if (response.ok) {
         console.log("Photo changed successfully");
+        setPhoto(null);
+        setPreview(null);
         onClose();
+      } else if (response.status === 401) {
+        console.error("Failed to change photo: Unauthorized");
+        alert("You have been logged out. Please log in again.");
+        localStorage.removeItem("token");
+        setAuthenticated(false);
+        onClose();
+        navigate("/sign-in");
       } else {
-        console.error("Failed to change photo");
+        console.error("Failed to change photo: Unexpected error");
+        alert("Failed to change photo, please try again later.");
+        onClose();
       }
     } catch (error) {
       console.error("Failed to change photo:", error);

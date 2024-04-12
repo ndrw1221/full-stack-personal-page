@@ -6,8 +6,9 @@ import ProfilePhotoChangeModal from "./ProfilePhotoChangeModal";
 
 export default function Profile() {
   const [username, setUsername] = useState("");
-  const { setIsAuthenticated } = useContext(AuthContext);
+  const [photo, setPhoto] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const { setIsAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const fetchData = async () => {
@@ -26,6 +27,8 @@ export default function Profile() {
         setUsername(data.user);
       } else if (response.status === 401) {
         console.error("Unauthorized");
+        alert("You have been logged out. Please log in again.");
+        setIsAuthenticated(false);
         localStorage.removeItem("token");
         navigate("/sign-in");
       } else if (response.status === 403) {
@@ -40,6 +43,25 @@ export default function Profile() {
     }
   };
 
+  const fetchPhoto = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/v1/users/photo", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        setPhoto(URL.createObjectURL(blob));
+      }
+    } catch (error) {
+      console.error("Failed to fetch user photo:", error);
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsAuthenticated(false);
@@ -48,6 +70,7 @@ export default function Profile() {
 
   useEffect(() => {
     fetchData();
+    fetchPhoto();
   }, []);
 
   return (
@@ -66,10 +89,18 @@ export default function Profile() {
                 Your Photo
               </label>
               <div className="mt-2 flex items-center gap-x-3">
-                <UserCircleIcon
-                  className="h-24 w-24   text-gray-300"
-                  aria-hidden="true"
-                />
+                {photo ? (
+                  <img
+                    src={photo}
+                    alt="User photo"
+                    className="h-24 w-24 rounded-full border-2 border-gray-300"
+                  />
+                ) : (
+                  <UserCircleIcon
+                    className="h-24 w-24   text-gray-300"
+                    aria-hidden="true"
+                  />
+                )}
                 <button
                   type="button"
                   onClick={() => setShowModal(true)}
@@ -96,6 +127,7 @@ export default function Profile() {
         isOpen={showModal}
         onClose={() => {
           setShowModal(false);
+          fetchPhoto();
         }}
       />
     </div>

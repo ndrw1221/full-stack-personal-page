@@ -1,5 +1,6 @@
 import { prisma } from "../../../../adapters.js";
 import bcrypt from "bcrypt";
+import path from "path";
 
 export async function createUser(req, res) {
   const { name, password } = req.body;
@@ -74,4 +75,21 @@ export async function updateUserPhoto(req, res) {
     console.error("Error updating user photo:", error);
     res.status(400).json({ error: "Error updating user photo." });
   }
+}
+
+export async function getUserPhoto(req, res) {
+  const name = req.userName;
+  const user = await prisma.user.findUnique({
+    where: {
+      name: name,
+    },
+  });
+  if (!user) {
+    res.status(404).json({ error: "User not found." });
+  }
+  if (!user.photo) {
+    res.status(404).json({ error: `User photo not found.` });
+  }
+  const absolutePath = path.resolve(user.photo);
+  res.status(200).sendFile(absolutePath);
 }
