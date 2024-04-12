@@ -55,3 +55,26 @@ export async function deleteUserByName(req, res) {
     res.status(400).json({ error: "Error deleting user." });
   }
 }
+
+export async function updateUserPhoto(req, res) {
+  // const username = req.userName;
+  // const photo_path = req.file.path;
+
+  if (!req.file) return res.status(400).json({ error: "No file uploaded." });
+
+  try {
+    // const user = await prisma.user.update({
+    //   where: {
+    //     name: userName,
+    //   },
+    //   data: {
+    //     photo: photo.data,
+    //   },
+    // });
+    console.log("File uploaded:", req.file.path);
+    res.status(200).json("Photo uploaded successfully.");
+  } catch (error) {
+    console.error("Error updating user photo:", error);
+    res.status(400).json({ error: "Error updating user photo." });
+  }
+}
