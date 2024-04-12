@@ -1,20 +1,14 @@
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { AuthContext } from "../contexts/AuthContext";
+import ProfilePhotoChangeModal from "./ProfilePhotoChangeModal";
 
 export default function Profile() {
   const [username, setUsername] = useState("");
   const { setIsAuthenticated } = useContext(AuthContext);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-
-  const handleLogout = () => {
-    // remove token from localStorage
-    localStorage.removeItem("token");
-    // set isAuthenticated to false
-    setIsAuthenticated(false);
-    navigate("/sign-in");
-  };
 
   const fetchData = async () => {
     try {
@@ -46,6 +40,12 @@ export default function Profile() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsAuthenticated(false);
+    navigate("/sign-in");
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -72,6 +72,7 @@ export default function Profile() {
                 />
                 <button
                   type="button"
+                  onClick={() => setShowModal(true)}
                   className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                 >
                   Change
@@ -90,6 +91,13 @@ export default function Profile() {
           Log out
         </button>
       </div>
+
+      <ProfilePhotoChangeModal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
+        }}
+      />
     </div>
   );
 }
