@@ -20,4 +20,13 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   photo String?
+  comments Comment[]
+}
+
+model Comment {
+  id          Int      @id @default(autoincrement())
+  content     String
+  commentedAt DateTime @default(now())
+  commentedBy User     @relation(fields: [userId], references: [id])
+  userId      Int      // This will link a comment to a user
 }
