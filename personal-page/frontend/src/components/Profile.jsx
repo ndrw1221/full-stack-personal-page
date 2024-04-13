@@ -55,12 +55,6 @@ export default function Profile() {
               <div className="flex items-center gap-x-3 text-3xl mb-12">
                 Hello, {me}
               </div>
-              <label
-                htmlFor="photo"
-                className="block text-lg font-bold leading-6 text-gray-900"
-              >
-                Your Photo
-              </label>
               <div className="mt-2 flex items-center gap-x-3">
                 <img
                   src={`http://localhost:8000/api/uploads/${me}.jpg?${refreshKey}`}
@@ -69,7 +63,7 @@ export default function Profile() {
                     e.target.src = default_avatar;
                   }}
                   alt="Profile picture"
-                  className="h-24 w-24 rounded-full border-2 border-gray-300"
+                  className="h-48 w-48 rounded-full border-2 border-gray-300 object-cover"
                 />
                 <button
                   type="button"

@@ -3,12 +3,12 @@ import my_image from "../assets/my-image.jpg";
 export default function About() {
   return (
     <div className="flex flex-col basis-11/12 sm:mx-40 mt-16">
-      <div className="basis-1/3 flex flex-row flex-wrap">
+      <div className="basis-1/3 flex flex-wrap justify-center gap-x-16">
         <img
           src={my_image}
-          className="aspect-square max-w-60 max-h-60 ml-20 rounded-full"
+          className="aspect-square max-w-60 max-h-60 rounded-full"
         />
-        <p className="text-5xl sm:text-9xl font-serif my-auto ml-16 text-emerald-950">
+        <p className="max-sm:text-5xl max-md:text-6xl max-lg:text-7xl text-9xl font-serif my-auto text-emerald-950">
           Andrew Hsieh
         </p>
       </div>

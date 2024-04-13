@@ -124,7 +124,10 @@ export default function Comments() {
   return (
     <>
       {comments ? ( // need to be fixed
-        <ul role="list" className="divide-y divide-gray-100 mx-24 mt-11">
+        <ul
+          role="list"
+          className="divide-y divide-gray-100 mx-48 mt-11 max-sm:mx-5 max-lg:mx-24"
+        >
           {!isAllComments && (
             <li>
               <button
@@ -251,7 +254,7 @@ export default function Comments() {
       )}
       <form
         onSubmit={handleAddComment}
-        className="mx-24 mt-6 px-4 pb-10 flex justify-between space-x-4"
+        className="mx-48 max-sm:mx-5 max-lg:mx-24 mt-6 px-4 pb-10 flex justify-between space-x-4"
       >
         <input
           id="comment-id"
