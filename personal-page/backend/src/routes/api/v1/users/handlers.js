@@ -1,6 +1,25 @@
 import { prisma } from "../../../../adapters.js";
 import bcrypt from "bcrypt";
-import path from "path";
+
+export async function getAllUsers(req, res) {
+  const allUsers = await prisma.user.findMany();
+  res.status(200).json(allUsers);
+}
+
+export async function getUserByName(req, res) {
+  const { name } = req.params;
+  const user = await prisma.user.findUnique({
+    where: {
+      name: name,
+    },
+  });
+  if (user) {
+    const { password, ...userWithoutPassword } = user;
+    res.status(200).json(userWithoutPassword);
+  } else {
+    res.status(404).json({ error: "User not found." });
+  }
+}
 
 export async function createUser(req, res) {
   const { name, password } = req.body;
@@ -19,41 +38,6 @@ export async function createUser(req, res) {
     // Handle potential errors, such as a violation of the unique constraint for 'name'
     console.error("Error creating user:", error);
     res.status(400).json({ error: "Error creating user." });
-  }
-}
-
-export async function getUserByName(req, res) {
-  const { name } = req.params;
-  const user = await prisma.user.findUnique({
-    where: {
-      name: name,
-    },
-  });
-  if (user) {
-    const { password, ...userWithoutPassword } = user;
-    res.status(200).json(userWithoutPassword);
-  } else {
-    res.status(404).json({ error: "User not found." });
-  }
-}
-
-export async function getAllUsers(req, res) {
-  const allUsers = await prisma.user.findMany();
-  res.status(200).json(allUsers);
-}
-
-export async function deleteUserByName(req, res) {
-  const { name } = req.params;
-  try {
-    const user = await prisma.user.delete({
-      where: {
-        name: name,
-      },
-    });
-    res.status(200).json(user);
-  } catch (error) {
-    console.error("Error deleting user:", error);
-    res.status(400).json({ error: "Error deleting user." });
   }
 }
 
@@ -77,19 +61,17 @@ export async function updateUserPhoto(req, res) {
   }
 }
 
-export async function getUserPhoto(req, res) {
-  const name = req.userName;
-  const user = await prisma.user.findUnique({
-    where: {
-      name: name,
-    },
-  });
-  if (!user) {
-    res.status(404).json({ error: "User not found." });
+export async function deleteUserByName(req, res) {
+  const { name } = req.params;
+  try {
+    const user = await prisma.user.delete({
+      where: {
+        name: name,
+      },
+    });
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(400).json({ error: "Error deleting user." });
   }
-  if (!user.photo) {
-    res.status(404).json({ error: `User photo not found.` });
-  }
-  const absolutePath = path.resolve(user.photo);
-  res.status(200).sendFile(absolutePath);
 }
