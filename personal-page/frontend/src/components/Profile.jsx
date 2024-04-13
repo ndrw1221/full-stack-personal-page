@@ -1,12 +1,11 @@
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { AuthContext } from "../contexts/AuthContext";
 import ProfilePhotoChangeModal from "./ProfilePhotoChangeModal";
+import default_avatar from "../assets/default_avatar.jpg";
 
 export default function Profile() {
   const [username, setUsername] = useState("");
-  const [photo, setPhoto] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const { setIsAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -43,25 +42,6 @@ export default function Profile() {
     }
   };
 
-  const fetchPhoto = async () => {
-    try {
-      const response = await fetch("http://localhost:8000/api/v1/users/photo", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      if (response.ok) {
-        const blob = await response.blob();
-        setPhoto(URL.createObjectURL(blob));
-      }
-    } catch (error) {
-      console.error("Failed to fetch user photo:", error);
-    }
-  };
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsAuthenticated(false);
@@ -70,7 +50,6 @@ export default function Profile() {
 
   useEffect(() => {
     fetchData();
-    fetchPhoto();
   }, []);
 
   return (
@@ -89,18 +68,15 @@ export default function Profile() {
                 Your Photo
               </label>
               <div className="mt-2 flex items-center gap-x-3">
-                {photo ? (
-                  <img
-                    src={photo}
-                    alt="User photo"
-                    className="h-24 w-24 rounded-full border-2 border-gray-300"
-                  />
-                ) : (
-                  <UserCircleIcon
-                    className="h-24 w-24   text-gray-300"
-                    aria-hidden="true"
-                  />
-                )}
+                <img
+                  src={`http://localhost:8000/api/uploads/${username}.jpg`}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = default_avatar;
+                  }}
+                  alt="Profile picture"
+                  className="h-24 w-24 rounded-full border-2 border-gray-300"
+                />
                 <button
                   type="button"
                   onClick={() => setShowModal(true)}
