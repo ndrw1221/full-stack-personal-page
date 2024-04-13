@@ -2,7 +2,7 @@ import { prisma } from "../../../../adapters.js";
 
 export async function getAllComments(req, res) {
   const page = parseInt(req.query.page) || 1;
-  const pageSize = 10 * page;
+  const pageSize = 8 * page;
 
   const comments = await prisma.comment.findMany({
     take: pageSize,
@@ -31,7 +31,7 @@ export async function createComment(req, res) {
     const comment = await prisma.comment.create({
       data: {
         content,
-        userId: user.id,
+        name: user.name,
       },
     });
 
@@ -53,11 +53,7 @@ export async function deleteCommentById(req, res) {
       return res.status(404).json({ message: "Comment not found" });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { name: req.userName },
-    });
-
-    if (comment.userId !== user.id) {
+    if (comment.name !== req.userName) {
       return res
         .status(403)
         .json({ message: "You can only delete your own comments" });
