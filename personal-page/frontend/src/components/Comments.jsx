@@ -1,72 +1,68 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect, useInsertionEffect } from "react";
 import { AuthContext } from "../contexts/AuthContext.js";
-import my_image from "../assets/my-image.jpg";
-import guest_image from "../assets/default_avatar.jpg";
-
-let comments = [
-  {
-    id: 1,
-    name: "Leslie Alexander",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    message:
-      "In the vast expanse of human communication, there exists a unique category of expressions that, while seemingly empty, are rich with implied meaning. These utterances, often brief and devoid of concrete information, serve as vessels for a multitude of interpretations, drawing on the shared experiences, emotions, and understanding that bind us. Through their very lack of specificity, they speak volumes, inviting listeners to fill the gaps with their own thoughts, thereby fostering a silent dialogue that resonates deeply within the human psyche.",
-    time: "yesterday",
-  },
-  {
-    id: 2,
-    name: "Andrew Hsieh",
-    imageUrl: my_image,
-    message: "A quick brown fox jumps over the lazy dog.",
-    time: "3h ago",
-  },
-];
-
-let id = 3;
+import { formatDistanceToNow } from "date-fns";
+import default_avatar from "../assets/default_avatar.jpg";
 
 export default function Comments() {
-  const [commentsState, setCommentsState] = useState(comments);
+  const [comments, setComments] = useState([]);
   const [inputValue, setInputValue] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
   const { isAuthenticated } = useContext(AuthContext);
 
-  const commentHandler = () => {
-    const newComment = {
-      id: id++, // need to be fixed
-      name: "Guest",
-      imageUrl: guest_image,
-      message: inputValue,
-      time: "now", // need to be fixed
-    };
-
-    setCommentsState([...comments, newComment]);
-    comments = [...comments, newComment];
-
-    setInputValue("");
+  const fetchComments = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/v1/comments?page=${pageNumber}`,
+        {
+          method: "GET",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch comments");
+      }
+      const data = await response.json();
+      setComments(data.reverse()); // most recent comment appear at the bottom
+    } catch (error) {
+      console.error(error.message);
+    }
   };
+
+  useEffect(() => {
+    fetchComments();
+    const interval = setInterval(fetchComments, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <>
-      {commentsState ? ( // need to be fixed
+      {comments ? ( // need to be fixed
         <ul role="list" className="divide-y divide-gray-100 mx-24 mt-11">
-          {commentsState.map((comment) => (
+          {comments.map((comment) => (
             <li key={comment.id} className="flex justify-between gap-x-6 py-5">
               <div className="flex min-w-0 gap-x-4">
                 <img
                   className="h-12 w-12 flex-none rounded-full bg-gray-50"
-                  src={comment.imageUrl}
-                  alt=""
+                  src={`http://localhost:8000/api/uploads/${comment.name}.jpg`}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = default_avatar;
+                  }}
+                  alt="Profile picture"
                 />
                 <div className="min-w-0 flex-auto">
-                  <p className="text-sm font-semibold leading-6 text-gray-900">
+                  <p className="text-sm font-semibold leading-6 text-gray-500">
                     {comment.name}
                   </p>
-                  <p className="mt-1 text-xs leading-5 text-gray-500">
-                    {comment.message}
+                  <p className="mt-1 text-sm font-extrabold leading-5 text-gray-800">
+                    {comment.content}
                   </p>
                 </div>
               </div>
               <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-                <p className="text-sm leading-6 text-gray-900">
-                  {comment.time}
+                <p className="text-xs leading-6 text-gray-900">
+                  {formatDistanceToNow(new Date(comment.commentedAt), {
+                    addSuffix: true,
+                  })}
                 </p>
               </div>
             </li>
@@ -95,7 +91,7 @@ export default function Comments() {
               ? "bg-purple-400 hover:bg-purple-500 shadow-lg"
               : "bg-purple-300"
           }`}
-          onClick={commentHandler}
+          // onClick={commentHandler}
           disabled={!inputValue.trim()}
         >
           Comment
