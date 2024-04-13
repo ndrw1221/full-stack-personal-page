@@ -118,6 +118,7 @@ export default function ProfilePhotoChangeModal({ isOpen, onClose }) {
                           id="file-upload"
                           name="file-upload"
                           type="file"
+                          accept="image/*"
                           className="hidden"
                           onChange={handlePhotoChange}
                         />
