@@ -2,7 +2,7 @@ import { prisma } from "../../../../adapters.js";
 
 export async function getAllComments(req, res) {
   const page = parseInt(req.query.page) || 1;
-  const pageSize = 8 * page;
+  const pageSize = 6 * page;
 
   const comments = await prisma.comment.findMany({
     take: pageSize,
