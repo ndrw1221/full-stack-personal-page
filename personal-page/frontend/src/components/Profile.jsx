@@ -5,7 +5,8 @@ import ProfilePhotoChangeModal from "./ProfilePhotoChangeModal";
 import default_avatar from "../assets/default_avatar.jpg";
 
 export default function Profile() {
-  const [username, setUsername] = useState("");
+  const [me, setMe] = useState("");
+  const [refreshKey, setRefreshKey] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const { setIsAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -20,25 +21,18 @@ export default function Profile() {
         },
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-        setUsername(data.user);
-      } else if (response.status === 401) {
-        console.error("Unauthorized");
-        alert("You have been logged out. Please log in again.");
-        setIsAuthenticated(false);
-        localStorage.removeItem("token");
-        navigate("/sign-in");
-      } else if (response.status === 403) {
-        console.error("Forbidden");
-        navigate("/sign-in");
-      } else if (response.status === 500) {
-        console.error("Internal server error");
-        navigate("/sign-in");
+      if (!response.ok) {
+        throw new Error(response.statusText);
       }
+
+      const data = await response.json();
+      setMe(data.user);
     } catch (error) {
       console.error("Failed to fetch user data:", error);
+      alert("You have been logged out. Please log in again.");
+      setIsAuthenticated(false);
+      localStorage.removeItem("token");
+      navigate("/sign-in");
     }
   };
 
@@ -59,7 +53,7 @@ export default function Profile() {
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="col-span-full">
               <div className="flex items-center gap-x-3 text-3xl mb-12">
-                Hello, {username}
+                Hello, {me}
               </div>
               <label
                 htmlFor="photo"
@@ -69,7 +63,7 @@ export default function Profile() {
               </label>
               <div className="mt-2 flex items-center gap-x-3">
                 <img
-                  src={`http://localhost:8000/api/uploads/${username}.jpg`}
+                  src={`http://localhost:8000/api/uploads/${me}.jpg?${refreshKey}`}
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = default_avatar;
@@ -103,7 +97,7 @@ export default function Profile() {
         isOpen={showModal}
         onClose={() => {
           setShowModal(false);
-          fetchPhoto();
+          setRefreshKey((oldKey) => oldKey + 1);
         }}
       />
     </div>
