@@ -4,6 +4,9 @@
   "main": "index.js",
   "author": "andrew <andrew891221@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": "20.11.1",
+  },
   "scripts": {
     "start": "cd backend && yarn start",
     "build": "cd frontend && yarn build",
