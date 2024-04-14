@@ -34,7 +34,7 @@ export default function ProfilePhotoChangeModal({ isOpen, onClose }) {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/api/v1/users/upload",
+        "https://personal-webpage-01e2a082902f.herokuapp.com/api/v1/users/upload",
         {
           method: "POST",
           headers: {

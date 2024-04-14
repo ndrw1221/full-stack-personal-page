@@ -21,13 +21,16 @@ export default function Signin() {
     event.preventDefault();
     setShowError(false);
     try {
-      const response = await fetch("http://localhost:8000/api/v1/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name: username, password: password }),
-      });
+      const response = await fetch(
+        "https://personal-webpage-01e2a082902f.herokuapp.com/api/v1/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name: username, password: password }),
+        }
+      );
 
       if (response.ok) {
         setUsername("");

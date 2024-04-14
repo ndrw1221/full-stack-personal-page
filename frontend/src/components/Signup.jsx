@@ -32,7 +32,7 @@ export default function Signup() {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/api/v1/auth/register",
+        "https://personal-webpage-01e2a082902f.herokuapp.com/api/v1/auth/register",
         {
           method: "POST",
           headers: {
