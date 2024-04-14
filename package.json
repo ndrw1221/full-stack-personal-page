@@ -5,7 +5,8 @@
   "author": "andrew <andrew891221@gmail.com>",
   "license": "MIT",
   "engines": {
-    "node": "20.11.1"
+    "node": "20.11.1",
+    "yarn": "1.22.22"
   },
   "scripts": {
     "start": "cd backend && yarn start",
