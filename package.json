@@ -1,7 +1,6 @@
 {
-  "name": "Lab5",
+  "name": "fullstack",
   "version": "1.0.0",
-  "main": "index.js",
   "author": "andrew <andrew891221@gmail.com>",
   "license": "MIT",
   "engines": {
