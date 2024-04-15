@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext.js";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  // const [showNotification, setShowNotification] = useState(false);
   const [showError, setShowError] = useState("");
-
+  const { setIsAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleUsernameChange = (event) => {
@@ -53,7 +53,7 @@ export default function Signup() {
         const data = await response.json();
         localStorage.setItem("token", data.token);
         console.log("User created successfully");
-
+        setIsAuthenticated(true);
         navigate("/profile");
       } else if (response.status === 409) {
         setShowError("User already exists");
@@ -65,16 +65,6 @@ export default function Signup() {
 
   return (
     <>
-      {/* {showNotification && (
-        <div
-          class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 w-1/2 mx-auto"
-          role="alert"
-        >
-          <p class="font-bold">Success</p>
-          <p>Your account has been created successfully.</p>
-        </div>
-      )} */}
-
       <div className="flex h-full flex-1 flex-col justify-center px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm -mt-60">
           <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
