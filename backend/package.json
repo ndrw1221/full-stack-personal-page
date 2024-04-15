@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "src/index.js",
   "license": "MIT",
+  "type": "module",
   "dependencies": {
     "@prisma/client": "^5.12.1",
     "bcrypt": "^5.1.1",
@@ -10,12 +11,11 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
-    "prisma": "^5.11.0"
+    "prisma": "^5.12.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
   },
-  "type": "module",
   "scripts": {
     "start": "yarn prisma migrate deploy && node --experimental-specifier-resolution=node src/index.js",
     "dev": "nodemon --experimental-specifier-resolution=node src/index.js"
