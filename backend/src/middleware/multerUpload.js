@@ -5,7 +5,7 @@ const dir = "./uploads";
 
 // Create the "./uploads" directory if it doesn't exist
 if (!fs.existsSync(dir)) {
-  fs.mkdirSync(dir, (recursive = true));
+  fs.mkdirSync(dir, { recursive: true });
 }
 
 // Configure Multer to save uploaded files in the "uploads/" directory
