@@ -14,7 +14,7 @@ export default function Profile() {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        "https://personal-webpage-01e2a082902f.herokuapp.com/api/v1/auth/me",
+        "https://full-stack-personal-webpage-30de4d0b96dc.herokuapp.com/api/v1/auth/me",
         {
           method: "GET",
           headers: {
@@ -60,7 +60,7 @@ export default function Profile() {
               </div>
               <div className="mt-2 flex items-center gap-x-3">
                 <img
-                  src={`https://personal-webpage-01e2a082902f.herokuapp.com/api/uploads/${me}.jpg?${refreshKey}`}
+                  src={`https://full-stack-personal-webpage-30de4d0b96dc.herokuapp.com/api/uploads/${me}.jpg?${refreshKey}`}
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = default_avatar;
