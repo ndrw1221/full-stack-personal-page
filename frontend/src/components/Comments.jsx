@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { AuthContext } from "../contexts/AuthContext.js";
 import { formatDistanceToNow } from "date-fns";
 import default_avatar from "../assets/default_avatar.jpg";
@@ -10,6 +10,7 @@ export default function Comments() {
   const [pageNumber, setPageNumber] = useState(1);
   const [isAllComments, setIsAllComments] = useState(false);
   const [me, setMe] = useState("");
+  const pageNumberRef = useRef(pageNumber);
   const { isAuthenticated } = useContext(AuthContext);
 
   const fetchComments = async (pageNum) => {
@@ -123,9 +124,15 @@ export default function Comments() {
   };
 
   useEffect(() => {
+    pageNumberRef.current = pageNumber;
+  }, [pageNumber]);
+
+  useEffect(() => {
     fetchComments(pageNumber);
     fetchMe();
-    const interval = setInterval(fetchComments, 20000);
+    const interval = setInterval(() => {
+      fetchComments(pageNumberRef.current);
+    }, 15000);
     return () => clearInterval(interval);
   }, []);
 
