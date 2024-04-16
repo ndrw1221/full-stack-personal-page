@@ -11,15 +11,15 @@ import { upload } from "../../../../middleware/multerUpload.js";
 
 const router = Router();
 
-router.get("/", getAllUsers);
+// router.get("/", getAllUsers);
 // router.get("/:name", getUserByName);
-router.post("/", createUser);
+// router.post("/", createUser);
 router.post(
   "/upload",
   authenticateToken,
   upload.single("photo"),
   updateUserPhoto
 );
-router.delete("/:name", deleteUserByName);
+// router.delete("/:name", deleteUserByName);
 
 export default router;
