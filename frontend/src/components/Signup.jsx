@@ -16,10 +16,20 @@ export default function Signup() {
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value.trim());
+    if (event.target.value.trim().length < 8) {
+      setShowError("Password must be at least 8 characters long");
+    } else {
+      setShowError("");
+    }
   };
 
   const handleConfirmPasswordChange = (event) => {
     setConfirmPassword(event.target.value.trim());
+    if (event.target.value.trim() !== password) {
+      setShowError("Passwords do not match");
+    } else {
+      setShowError("");
+    }
   };
 
   const signup = async (event) => {
@@ -27,6 +37,11 @@ export default function Signup() {
     setShowError("");
     if (password !== confirmPassword) {
       setShowError("Passwords do not match");
+      return;
+    }
+
+    if (password.length < 8) {
+      setShowError("Password must be at least 8 characters long");
       return;
     }
 
@@ -46,8 +61,6 @@ export default function Signup() {
         setUsername("");
         setPassword("");
         setConfirmPassword("");
-        // setShowNotification(true); // Show notification on success
-        // setTimeout(() => setShowNotification(false), 4000); // Hide after 4 seconds
 
         // Save the token in local storage
         const data = await response.json();
@@ -146,11 +159,13 @@ export default function Signup() {
               <button
                 type="submit"
                 className={`flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
-                  username && password && confirmPassword
+                  username && password && confirmPassword && !showError
                     ? "bg-indigo-600 hover:bg-indigo-500"
                     : "bg-indigo-400"
                 }`}
-                disabled={!(username && password && confirmPassword)}
+                disabled={
+                  !(username && password && confirmPassword && !showError)
+                }
               >
                 Sign up
               </button>
