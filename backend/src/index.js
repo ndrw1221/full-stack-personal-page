@@ -17,8 +17,6 @@ const frontendDir = path.join(__dirname, "../../frontend/dist");
 
 app.use(express.static(frontendDir));
 
-app.use("/api/uploads", express.static(path.join(__dirname, "../uploads")));
-
 app.get("*", (req, res) => {
   if (!req.originalUrl.startsWith("/api")) {
     return res.sendFile(path.join(frontendDir, "index.html"));
