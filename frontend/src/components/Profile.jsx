@@ -10,19 +10,17 @@ export default function Profile() {
   const [showModal, setShowModal] = useState(false);
   const { setIsAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
   const fetchData = async () => {
     try {
-      const response = await fetch(
-        "https://full-stack-personal-webpage-30de4d0b96dc.herokuapp.com/api/v1/auth/me",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await fetch(`${apiBaseUrl}/api/v1/auth/me`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error(response.statusText);
@@ -60,7 +58,7 @@ export default function Profile() {
               </div>
               <div className="mt-2 flex items-center gap-x-3">
                 <img
-                  src={`https://full-stack-personal-webpage-30de4d0b96dc.herokuapp.com/api/uploads/${me}.jpg?${refreshKey}`}
+                  src={`${apiBaseUrl}/api/uploads/${me}.jpg?${refreshKey}`}
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = default_avatar;

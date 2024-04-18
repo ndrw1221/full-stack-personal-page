@@ -10,6 +10,8 @@ export default function Signup() {
   const { setIsAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
   const handleUsernameChange = (event) => {
     setUsername(event.target.value.trim());
   };
@@ -46,16 +48,13 @@ export default function Signup() {
     }
 
     try {
-      const response = await fetch(
-        "https://full-stack-personal-webpage-30de4d0b96dc.herokuapp.com/api/v1/auth/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ name: username, password: password }),
-        }
-      );
+      const response = await fetch(`${apiBaseUrl}/api/v1/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: username, password: password }),
+      });
 
       if (response.ok) {
         setUsername("");

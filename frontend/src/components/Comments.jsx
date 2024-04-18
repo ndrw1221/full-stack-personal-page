@@ -13,10 +13,12 @@ export default function Comments() {
   const pageNumberRef = useRef(pageNumber);
   const { isAuthenticated } = useContext(AuthContext);
 
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
   const fetchComments = async (pageNum) => {
     try {
       const responseOne = await fetch(
-        `https://full-stack-personal-webpage-30de4d0b96dc.herokuapp.com/api/v1/comments?page=${pageNum}`,
+        `${apiBaseUrl}/api/v1/comments?page=${pageNum}`,
         {
           method: "GET",
         }
@@ -25,9 +27,7 @@ export default function Comments() {
         throw new Error("Failed to fetch comments");
       }
       const responseTwo = await fetch(
-        `https://full-stack-personal-webpage-30de4d0b96dc.herokuapp.com/api/v1/comments?page=${
-          pageNum + 1
-        }`,
+        `${apiBaseUrl}/api/v1/comments?page=${pageNum + 1}`,
         {
           method: "GET",
         }
@@ -50,16 +50,13 @@ export default function Comments() {
 
   const fetchMe = async () => {
     try {
-      const response = await fetch(
-        "https://full-stack-personal-webpage-30de4d0b96dc.herokuapp.com/api/v1/auth/me",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await fetch("${apiBaseUrl}/api/v1/auth/me", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       if (!response.ok) {
         throw new Error("Failed to fetch user data");
       }
@@ -73,17 +70,14 @@ export default function Comments() {
   const handleAddComment = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(
-        "https://full-stack-personal-webpage-30de4d0b96dc.herokuapp.com/api/v1/comments",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({ content: inputValue }),
-        }
-      );
+      const response = await fetch("${apiBaseUrl}/api/v1/comments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ content: inputValue }),
+      });
       if (!response.ok) {
         throw new Error("Failed to add comment");
       }
@@ -100,16 +94,13 @@ export default function Comments() {
 
   const handleDeleteComment = async (id) => {
     try {
-      const response = await fetch(
-        `https://full-stack-personal-webpage-30de4d0b96dc.herokuapp.com/api/v1/comments/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await fetch(`${apiBaseUrl}/api/v1/comments/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       if (!response.ok) {
         throw new Error("Failed to delete comment");
       }
@@ -186,7 +177,7 @@ export default function Comments() {
               <div className="flex min-w-0 gap-x-4">
                 <img
                   className="h-12 w-12 flex-none rounded-full bg-gray-50"
-                  src={`https://full-stack-personal-webpage-30de4d0b96dc.herokuapp.com/api/uploads/${comment.name}.jpg`}
+                  src={`${apiBaseUrl}/api/uploads/${comment.name}.jpg`}
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = default_avatar;

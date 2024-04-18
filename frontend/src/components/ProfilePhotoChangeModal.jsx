@@ -9,6 +9,8 @@ export default function ProfilePhotoChangeModal({ isOpen, onClose }) {
   const { setAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
   const handlePhotoChange = (event) => {
     const file = event.target.files[0];
     setShowError(false);
@@ -33,16 +35,13 @@ export default function ProfilePhotoChangeModal({ isOpen, onClose }) {
     formData.append("photo", photo);
 
     try {
-      const response = await fetch(
-        "https://full-stack-personal-webpage-30de4d0b96dc.herokuapp.com/api/v1/users/upload",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: formData,
-        }
-      );
+      const response = await fetch(`${apiBaseUrl}/api/v1/users/upload`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: formData,
+      });
 
       if (response.ok) {
         console.log("Photo changed successfully");
