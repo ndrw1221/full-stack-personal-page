@@ -6,7 +6,7 @@ import default_avatar from "../assets/default_avatar.jpg";
 
 export default function Profile() {
   const [me, setMe] = useState("");
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(Date.now());
   const [showModal, setShowModal] = useState(false);
   const { setIsAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -58,7 +58,7 @@ export default function Profile() {
               </div>
               <div className="mt-2 flex items-center gap-x-3">
                 <img
-                  src={`${apiBaseUrl}/api/uploads/${me}.jpg?${refreshKey}`}
+                  src={`https://storage.googleapis.com/profile-image-uploads-bucket/${me}.jpg?${refreshKey}`}
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = default_avatar;
@@ -92,7 +92,7 @@ export default function Profile() {
         isOpen={showModal}
         onClose={() => {
           setShowModal(false);
-          setRefreshKey((oldKey) => oldKey + 1);
+          setRefreshKey(Date.now());
         }}
       />
     </div>

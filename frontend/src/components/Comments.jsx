@@ -50,7 +50,7 @@ export default function Comments() {
 
   const fetchMe = async () => {
     try {
-      const response = await fetch("${apiBaseUrl}/api/v1/auth/me", {
+      const response = await fetch(`${apiBaseUrl}/api/v1/auth/me`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -70,7 +70,7 @@ export default function Comments() {
   const handleAddComment = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("${apiBaseUrl}/api/v1/comments", {
+      const response = await fetch(`${apiBaseUrl}/api/v1/comments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -177,7 +177,9 @@ export default function Comments() {
               <div className="flex min-w-0 gap-x-4">
                 <img
                   className="h-12 w-12 flex-none rounded-full bg-gray-50"
-                  src={`${apiBaseUrl}/api/uploads/${comment.name}.jpg`}
+                  src={`https://storage.googleapis.com/profile-image-uploads-bucket/${
+                    comment.name
+                  }.jpg?${Date.now()}`}
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = default_avatar;
