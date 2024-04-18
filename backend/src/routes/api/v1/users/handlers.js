@@ -1,18 +1,15 @@
 import { prisma } from "../../../../adapters.js";
 import { Storage } from "@google-cloud/storage";
-import { fileURLToPath } from "url";
-import path, { dirname } from "path";
 import stream from "stream";
 // import bcrypt from "bcrypt";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const credentialsJSON = JSON.parse(
+  Buffer.from(process.env.GSC_CREDENTIALS, "base64").toString("ascii")
+);
 
 const storage = new Storage({
   projectId: "spatial-dryad-420410",
-  keyFilename: path.join(
-    __dirname,
-    "../../../../../spatial-dryad-420410-d3e9ac6d9f84.json"
-  ),
+  credentials: credentialsJSON,
 });
 
 const bucket = storage.bucket("profile-image-uploads-bucket");
