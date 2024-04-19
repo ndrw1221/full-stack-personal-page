@@ -8,6 +8,7 @@ import Comments from "./components/Comments.jsx";
 import Signin from "./components/Signin.jsx";
 import Signup from "./components/Signup.jsx";
 import Profile from "./components/Profile.jsx";
+import AIPage from "./components/AIPage.jsx";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 
 const router = createHashRouter([
@@ -35,6 +36,10 @@ const router = createHashRouter([
       {
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        path: "/AI",
+        element: <AIPage />,
       },
     ],
   },

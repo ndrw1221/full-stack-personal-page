@@ -57,6 +57,12 @@ export default function Header() {
           >
             Comments
           </Link>
+          <Link
+            to="/AI"
+            className="text-sm font-semibold leading-6 text-gray-900"
+          >
+            AI
+          </Link>
         </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           {isAuthenticated ? (
