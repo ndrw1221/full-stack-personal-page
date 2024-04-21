@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "cd backend && yarn && yarn start",
-    "build": "cd frontend && yarn && yarn build"
+    "build": "cd frontend && yarn && yarn build",
+    "build:dev": "cd frontend && yarn && yarn build:dev"
   }
 }
