@@ -56,20 +56,24 @@ export default function Signup() {
         body: JSON.stringify({ name: username, password: password }),
       });
 
-      if (response.ok) {
-        setUsername("");
-        setPassword("");
-        setConfirmPassword("");
-
-        // Save the token in local storage
-        const data = await response.json();
-        localStorage.setItem("token", data.token);
-        console.log("User created successfully");
-        setIsAuthenticated(true);
-        navigate("/profile");
-      } else if (response.status === 409) {
+      if (response.status === 409) {
         setShowError("User already exists");
+        return;
       }
+
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      setUsername("");
+      setPassword("");
+      setConfirmPassword("");
+
+      // Save the token in local storage
+      const data = await response.json();
+      setIsAuthenticated(data.auth);
+      console.log("User created successfully");
+      navigate("/profile");
     } catch (error) {
       console.error("Failed to create user:", error);
     }

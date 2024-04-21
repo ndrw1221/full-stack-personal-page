@@ -31,21 +31,24 @@ export default function Signin() {
         body: JSON.stringify({ name: username, password: password }),
       });
 
-      if (response.ok) {
-        setUsername("");
-        setPassword("");
-
-        // Save the token in local storage
-        const data = await response.json();
-        localStorage.setItem("token", data.token);
-        setIsAuthenticated(data.auth);
-        console.log("Logged in as", username);
-
-        navigate("/profile");
-      } else if (response.status === 401) {
-        console.error("Invalid credentials");
+      if (response.status === 401) {
         setShowError(true);
+        return;
       }
+
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      setUsername("");
+      setPassword("");
+
+      // Save the token in local storage
+      const data = await response.json();
+      setIsAuthenticated(data.auth);
+      console.log("Logged in as", username);
+
+      navigate("/profile");
     } catch (error) {
       console.error("Failed to log in:", error);
     }
@@ -53,16 +56,6 @@ export default function Signin() {
 
   return (
     <>
-      {/* {showNotification && (
-        <div
-          class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 w-1/2 mx-auto"
-          role="alert"
-        >
-          <p class="font-bold">Success</p>
-          <p>You have been logged in successfully.</p>
-          {}
-        </div>
-      )} */}
       <div className="flex h-full flex-1 flex-col justify-center px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm -mt-60">
           <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">

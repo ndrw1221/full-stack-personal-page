@@ -11,7 +11,7 @@ export default function Comments() {
   const [isAllComments, setIsAllComments] = useState(false);
   const [me, setMe] = useState("");
   const pageNumberRef = useRef(pageNumber);
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
 
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -35,6 +35,7 @@ export default function Comments() {
       if (!responseTwo.ok) {
         throw new Error("Failed to fetch comments");
       }
+      // check if all comments are fetched
       const dataOne = await responseOne.json();
       const dataTwo = await responseTwo.json();
       if (dataOne.length === dataTwo.length) {
@@ -54,7 +55,6 @@ export default function Comments() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       if (!response.ok) {
@@ -74,7 +74,6 @@ export default function Comments() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({ content: inputValue }),
       });
@@ -87,7 +86,6 @@ export default function Comments() {
       console.error(error.message);
       alert("You have been logged out. Please log in again.");
       setIsAuthenticated(false);
-      localStorage.removeItem("token");
       navigate("/sign-in");
     }
   };
@@ -98,7 +96,6 @@ export default function Comments() {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       if (!response.ok) {
@@ -109,7 +106,6 @@ export default function Comments() {
       console.error(error.message);
       alert("You have been logged out. Please log in again.");
       setIsAuthenticated(false);
-      localStorage.removeItem("token");
       navigate("/sign-in");
     }
   };
@@ -129,7 +125,7 @@ export default function Comments() {
 
   return (
     <>
-      {comments ? ( // need to be fixed
+      {comments ? (
         <ul
           role="list"
           className="divide-y divide-gray-100 mx-48 mt-11 max-sm:mx-5 max-lg:mx-24"

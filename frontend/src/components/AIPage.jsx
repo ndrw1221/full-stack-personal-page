@@ -29,8 +29,8 @@ export default function AIPage() {
 
     const response = await fetch(api_url, {
       headers: {
-        Authorization: `Bearer ${hf_token}`,
         "Content-Type": "application/json",
+        Authorization: `Bearer ${hf_token}`,
       },
       method: "POST",
       body: JSON.stringify(data),

@@ -18,7 +18,6 @@ export default function Profile() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
@@ -32,13 +31,29 @@ export default function Profile() {
       console.error("Failed to fetch user data:", error);
       alert("You have been logged out. Please log in again.");
       setIsAuthenticated(false);
-      localStorage.removeItem("token");
       navigate("/sign-in");
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
+  const handleLogout = async () => {
+    try {
+      fetch(`${apiBaseUrl}/api/v1/auth/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      const data = await response.json();
+      console.log(data.message);
+    } catch (error) {
+      console.error("Failed to log out:", error);
+    }
+
     setIsAuthenticated(false);
     navigate("/sign-in");
   };

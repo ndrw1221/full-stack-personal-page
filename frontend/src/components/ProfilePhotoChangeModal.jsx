@@ -37,9 +37,6 @@ export default function ProfilePhotoChangeModal({ isOpen, onClose }) {
     try {
       const response = await fetch(`${apiBaseUrl}/api/v1/users/upload`, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
         body: formData,
       });
 
@@ -51,7 +48,6 @@ export default function ProfilePhotoChangeModal({ isOpen, onClose }) {
       } else if (response.status === 401) {
         console.error("Failed to change photo: Unauthorized");
         alert("You have been logged out. Please log in again.");
-        localStorage.removeItem("token");
         setAuthenticated(false);
         onClose();
         navigate("/sign-in");
