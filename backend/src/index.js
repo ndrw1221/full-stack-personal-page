@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import rootRouter from "./routes/index.js";
+import cookieParser from "cookie-parser";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import { prisma } from "./adapters.js";
@@ -10,6 +11,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 app.use(rootRouter);
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
