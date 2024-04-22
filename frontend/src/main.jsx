@@ -8,7 +8,9 @@ import Comments from "./components/Comments.jsx";
 import Signin from "./components/Signin.jsx";
 import Signup from "./components/Signup.jsx";
 import Profile from "./components/Profile.jsx";
-import AIPage from "./components/AIPage.jsx";
+import AILandingPage from "./components/AILandingPage.jsx";
+import TextCompletion from "./components/TextCompletion.jsx";
+import ChatGPT from "./components/ChatGPT.jsx";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 
 const router = createHashRouter([
@@ -38,8 +40,16 @@ const router = createHashRouter([
         element: <Profile />,
       },
       {
-        path: "/AI",
-        element: <AIPage />,
+        path: "/ai",
+        element: <AILandingPage />,
+      },
+      {
+        path: "/text-completion",
+        element: <TextCompletion />,
+      },
+      {
+        path: "/chat-gpt",
+        element: <ChatGPT />,
       },
     ],
   },

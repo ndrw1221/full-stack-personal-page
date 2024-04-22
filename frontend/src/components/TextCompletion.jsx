@@ -8,7 +8,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function AIPage() {
+export default function TextCompletion() {
   const [model, setModel] = useState("gemma-7b");
   const [inputText, setInputText] = useState("");
   const [outputText, setOutputText] = useState("");
