@@ -4,7 +4,7 @@ import { AuthContext } from "./contexts/AuthContext.js";
 import Header from "./components/Header.jsx";
 
 function getSavedAuthStatus() {
-  const savedAuthStatus = localStorage.getItem("isAuthenticated");
+  const savedAuthStatus = sessionStorage.getItem("isAuthenticated");
   return savedAuthStatus !== null ? JSON.parse(savedAuthStatus) : false;
 }
 
@@ -12,7 +12,7 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(getSavedAuthStatus());
 
   useEffect(() => {
-    localStorage.setItem("isAuthenticated", JSON.stringify(isAuthenticated));
+    sessionStorage.setItem("isAuthenticated", JSON.stringify(isAuthenticated));
   }, [isAuthenticated]);
 
   return (
