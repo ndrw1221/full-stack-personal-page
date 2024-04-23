@@ -53,6 +53,7 @@ export async function completion(req, res) {
   }
 
   const result = await response.json();
+  console.log("[AI] ", result);
 
   res.status(200).json(result[0].generated_text);
 }
