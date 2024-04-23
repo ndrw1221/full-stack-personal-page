@@ -14,64 +14,38 @@ export default function TextCompletion() {
   const [outputText, setOutputText] = useState("");
   const { isAuthenticated } = useContext(AuthContext);
 
-  const hf_token = import.meta.env.VITE_HF_TOKEN;
-
-  async function query(data) {
-    let api_url = "";
-    if (model === "gemma-7b") {
-      api_url = "https://api-inference.huggingface.co/models/google/gemma-7b";
-    } else if (model === "GPT-2") {
-      api_url =
-        "https://api-inference.huggingface.co/models/openai-community/gpt2";
-    }
-
-    console.log("Fetching from: ", api_url);
-
-    const response = await fetch(api_url, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${hf_token}`,
-      },
-      method: "POST",
-      body: JSON.stringify(data),
-    });
-    const result = await response.json();
-    return result;
-  }
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setOutputText("Loading...");
-    query({
-      inputs: inputText,
-      options: {
-        use_cache: false,
-        max_new_tokens: 50,
-      },
-    }).then((response) => {
-      if (response.error) {
-        console.log(JSON.stringify(response));
-        setOutputText("Oops! Something went wrong. Please try again later.");
-        return;
-      }
-      setOutputText(response[0].generated_text);
-    });
-  };
 
-  const handleContinue = () => {
-    query({
-      inputs: outputText,
-      options: {
-        use_cache: false,
-        max_new_tokens: 100,
-      },
-    }).then((response) => {
+    try {
+      const response = await fetch("/api/v1/ai/completion", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: model,
+          data: {
+            inputs: inputText,
+            options: {
+              use_cache: false,
+              max_new_tokens: 50,
+            },
+          },
+        }),
+      });
+
       if (response.error) {
-        console.log(JSON.stringify(response));
-        setOutputText("Oops! Something went wrong. Please try again later.");
-        return;
+        throw new Error(response);
       }
-      setOutputText(response[0].generated_text);
-    });
+
+      const result = await response.json();
+      setOutputText(result);
+      setInputText("");
+    } catch (error) {
+      console.error("Error:", error);
+      setOutputText("Oops! Something went wrong. Please try again later.");
+    }
   };
 
   return (
@@ -192,24 +166,8 @@ export default function TextCompletion() {
           placeholder="Output text"
           value={outputText}
           readOnly
+          disabled={true}
         ></textarea>
-        <button
-          className={`p-2 mt-2 text-sm font-extrabold text-white rounded-lg border focus:ring-4 focus:outline-none focus:ring-blue-300 flex justify-center items-center ${
-            outputText.trim() &&
-            outputText !== "Loading..." &&
-            model !== "GPT-2"
-              ? "bg-blue-700 border-blue-700 hover:bg-blue-800"
-              : "hidden"
-          }`}
-          onClick={handleContinue}
-        >
-          Continue
-        </button>
-        {model === "GPT-2" && (
-          <p className="text-sm text-gray-500 mt-2">
-            Continue generation is not supported for GPT-2 model.
-          </p>
-        )}
       </div>
     </div>
   );
