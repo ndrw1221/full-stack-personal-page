@@ -126,6 +126,7 @@ export default function TextCompletion() {
                   : "Sign in to use this feature"
               }
               required
+              value={inputText}
               autoComplete="off"
               onChange={(e) => setInputText(e.target.value)}
               disabled={!isAuthenticated}
