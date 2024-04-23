@@ -40,10 +40,11 @@ export default function TextCompletion() {
       }
 
       const result = await response.json();
-      setOutputText(result);
       setInputText("");
+      setOutputText(result);
     } catch (error) {
       console.error("Error:", error);
+      setInputText("");
       setOutputText("Oops! Something went wrong. Please try again later.");
     }
   };

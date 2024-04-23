@@ -22,12 +22,12 @@ export default function Chat() {
       if (!response.ok) {
         throw new Error(response);
       }
-
       const data = await response.json();
-      setOutputText(data);
       setInputText("");
+      setOutputText(data);
     } catch (error) {
       setOutputText("An error occurred. Please try again.");
+      setInputText("");
       console.error(error);
     }
   };
@@ -35,13 +35,13 @@ export default function Chat() {
   return (
     <div className="flex flex-col mt-20 w-screen items-center gap-y-8">
       <h1 className="text-4xl font-bold text-center text-gray-900">
-        Chat with GPT3-turbo
+        Chat with Marv
       </h1>
       <p className="-mt-4 text-center text-gray-500">
         This is Marv, a chatbot that reluctantly answers questions with
         sarcastic responses.
       </p>
-      <p className="-mt-4 mb-5 text-center text-gray-500">
+      <p className="-mt-4 mb-5 text-center text-gray-400">
         如果不能用表示我沒錢了🥲，敬請見諒。
       </p>
       <div class="w-1/2 flex justify-end flex-wrap">
@@ -50,19 +50,21 @@ export default function Chat() {
           rows="5"
           placeholder="Output text"
           value={outputText}
+          disabled={true}
           readOnly
         ></textarea>
       </div>
       <form class="w-1/2" onSubmit={handleSubmit}>
         <div class="flex">
           <div class="relative w-full">
-            <textArea
+            <input
               class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
               placeholder={
                 isAuthenticated
                   ? "Enter your message here"
                   : "Sign in to use this feature"
               }
+              value={inputText}
               required
               autoComplete="off"
               onChange={(e) => setInputText(e.target.value)}
