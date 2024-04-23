@@ -18,5 +18,6 @@ export async function chat(req, res) {
     max_tokens: 64,
   });
 
-  res.json(completion.choices[0].message.content);
+  console.log("[AI]", completion.choices[0]);
+  res.status(200).json(completion.choices[0].message.content);
 }
