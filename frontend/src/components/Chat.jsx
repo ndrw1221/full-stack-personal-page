@@ -56,7 +56,7 @@ export default function Chat() {
       <form class="w-1/2" onSubmit={handleSubmit}>
         <div class="flex">
           <div class="relative w-full">
-            <input
+            <textArea
               class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
               placeholder={
                 isAuthenticated
